@@ -92,7 +92,7 @@ function LazyLoad(IOE, Observer){
 			var LazyLoader, aPics;
 			LazyLoader = new IntersectionObserver(LazyLoad, {
 				root: null,
-				rootMargin: '100px 0 0 0',/* load image before we get to it */
+				rootMargin: '100px 0px 0px 0px',/* load image before we get to it */
 				threshold: 0
 			});
 			aPics = document.querySelectorAll('picture,img');
