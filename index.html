@@ -63,6 +63,11 @@
 				padding: 0.45em 0;
 			}
 			
+			strong {
+				font-family: 'Roboto Condensed', sans-serif;
+				font-weight: 700;
+			}
+			
 			code {
 				background: #333;
 				color: #CCC;
@@ -104,6 +109,19 @@
 				text-decoration: none;
 			}
 
+			.js-image {
+				opacity: 0.01;
+			}
+			
+			.lazy-loading {
+				opacity: 0.05;
+			}
+			
+			.lazy-loaded {
+				opacity: 1;
+				transition: all 0.2s linear;
+			}
+
 		</style>
 		
 	</head>
@@ -115,25 +133,55 @@
 			
 				<div class="content">
 				
-					<div style="float: right;"><div class="example"><noscript class="nojs-image" data-fallback="https://picsum.photos/320/90?image=861"><img src="https://picsum.photos/320/90?image=861" width="320" height="90" alt="Image 861" /></noscript></div></div>
+					<div style="float: right;">
+						<div class="example">
+							<img class="js-image" data-src="https://picsum.photos/320/90?image=861" width="320" height="90" alt="Image 861" />
+							<noscript class="nojs-image">
+								<img src="https://picsum.photos/320/90?image=861" width="320" height="90" alt="Image 861" />
+							</noscript>
+						</div>
+					</div>
 			
 					<h2>No Frills Lazy Loading</h2>
 					
 					<p>To use, include the lazyloader.js file just before &lt;/body&gt; (like this):</p>
 				
-					<code>&lt;script href="lazyloader.0.1.js" async="async" defer="defer"&gt;&lt;/script&gt;</code>
+					<code>&lt;script href="lazyloader.0.2.js" defer="defer"&gt;&lt;/script&gt;</code>
 					
-					<p>Then wrap your images in a noscript element with a class of nojs-image (like so):</p>
+					<p>Then add the "js-image" class to your images, change "src" to "data-src" and add a fallback image inside a noscript element with a class of "nojs-image" (like so):</p>
 				
-					<code>&lt;noscript class="nojs-image" data-fallback="https://picsum.photos/990/557?image=456"&gt;
+					<code>&lt;img class="js-image" data-src="https://picsum.photos/990/557?image=456" width="990" height="557" alt="Image 456" /&gt;
 
-	&lt;img src="https://picsum.photos/990/557?image=456" alt="Image 456" /&gt;
+&lt;noscript class="nojs-image"&gt;
+
+	&lt;img src="https://picsum.photos/990/557?image=456" width="990" height="557" alt="Image 456" /&gt;
 
 &lt;/noscript&gt;</code>
 
-					<p>This also works for picture elements or if your image is wrapped in an anchor</p>
+					<p>Width and height attributes are <strong>strongly</strong> recommended.</p>
+
+					<p>This also works for picture elements (change the "srcset" attribute of the source elements to "data-srcset")</p>
 					
-					<p>Please note: the noscript tag must only have 1 child.</p>
+					<h2>Load Effects</h2>
+					
+					<p>You can use CSS transitions with the "js-image", "lazy-loading" and "lazy-loaded" classes to add effects for uninitialised, loading and loaded images respectively.</p>
+					
+					<p>This demo uses the following:</p>
+					
+					<code>.js-image {
+	opacity: 0.01;
+}
+
+.lazy-loading {
+	opacity: 0.05;
+}
+
+.lazy-loaded {
+	opacity: 1;
+	transition: all 0.2s linear;
+}</code>
+
+					<p>I haven't tested anything more complex so can make no assurances to its robustness.</p>
 					
 					<h2>Browser Support</h2>
 					
@@ -141,49 +189,54 @@
 					
 					<h2>Known Issues</h2>
 					
-					<p>Since the unloaded images have no height, some images may load before they enter the viewport.</p>
+					<p>Some images may load before they enter the viewport. I've added an intermediary fallback using a data uri from a grey canvas but it's imperfect (I assume there's some sort of race-condition nonsense causing this). </p>
 					
 					<h2>Example</h2>
 					
 					<p>Hopefully I've written enough to push these images under the fold.</p>
 					
-					<p>Nope. more text required</p>
-					
-					<p>Bleep</p>
-					
-					<p>Bloop</p>
-					
-					<p>Bleep</p>
-					
-					<p>Bloop</p>
-					
 					<div class="example">
 				
-						<noscript class="nojs-image" data-fallback="https://picsum.photos/990/557?image=456"><img src="https://picsum.photos/990/557?image=456" width="990" height="557" alt="Image 456" /></noscript>
+						<img class="js-image" data-src="https://picsum.photos/990/557?image=456" width="990" height="557" alt="Image 456" />
+						<noscript class="nojs-image">
+							<img src="https://picsum.photos/990/557?image=456" width="990" height="557" alt="Image 456" />
+						</noscript>
 					
 					</div>
 					
 					<div class="example">
 						
-						<noscript class="nojs-image" data-fallback="https://picsum.photos/990/557?image=789"><img src="https://picsum.photos/990/557?image=789" width="990" height="557" alt="Image 789" /></noscript>
+						<img class="js-image" data-src="https://picsum.photos/990/557?image=789" width="990" height="557" alt="Image 789" />
+						<noscript class="nojs-image">
+							<img src="https://picsum.photos/990/557?image=789" width="990" height="557" alt="Image 789" />
+						</noscript>
 					
 					</div>
 					
 					<div class="example">
 						
-						<noscript class="nojs-image" data-fallback="https://picsum.photos/990/557?image=220"><img src="https://picsum.photos/990/557?image=220" width="990" height="557" alt="Image 220" /></noscript>
+						<img class="js-image" data-src="https://picsum.photos/990/557?image=220" width="990" height="557" alt="Image 220" />
+						<noscript class="nojs-image">
+							<img src="https://picsum.photos/990/557?image=220" width="990" height="557" alt="Image 220" />
+						</noscript>
 					
 					</div>
 					
 					<div class="example">
 						
-						<noscript class="nojs-image" data-fallback="https://picsum.photos/990/557?image=666"><img src="https://picsum.photos/990/557?image=666" width="990" height="557" alt="Image 666" /></noscript>
+						<img class="js-image" data-src="https://picsum.photos/990/557?image=666" width="990" height="557" alt="Image 666" />
+						<noscript class="nojs-image">
+							<img src="https://picsum.photos/990/557?image=666" width="990" height="557" alt="Image 666" />
+						</noscript>
 					
 					</div>
 					
 					<div class="example">
 						
-						<noscript class="nojs-image" data-fallback="https://picsum.photos/990/557?image=523"><img src="https://picsum.photos/990/557?image=523" width="990" height="557" alt="Image 523" /></noscript>
+						<img class="js-image" data-src="https://picsum.photos/990/557?image=523" width="990" height="557" alt="Image 523" />
+						<noscript class="nojs-image">
+							<img src="https://picsum.photos/990/557?image=523" width="990" height="557" alt="Image 523" />
+						</noscript>
 					
 					</div>
 					
@@ -194,7 +247,7 @@
 			</div>
 		
 		</main>
-		<script src="lazyloader.0.1.min.js"></script>
+		<script defer src="lazyloader.0.2.min.js"></script>
 	
 	</body>
 </html>
