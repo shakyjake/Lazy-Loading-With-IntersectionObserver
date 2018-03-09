@@ -12,64 +12,66 @@ if(typeof(IntersectionObserver) !== 'undefined'){
 }
 
 function SetupLazyLoading(Img, bLazy){
-	
+
 	if(bLazy){
-				
-		var Canvas, Context, Width, Height;
 		
-		if(Img.nodeName.toLowerCase() === 'picture'){
-			
-			var FallBack;
-			FallBack = Img.querySelectorAll('img');
-			if(!!FallBack.length){
-				
-				FallBack = FallBack[0];
-			
-				Width = FallBack.getAttribute('width');/* .width/height gives live dimensions, we just want the value of the attribute */
-				Height = FallBack.getAttribute('height');
-				
-				Width = !!Width ? Width : 1920;
-				Height = !!Height ? Height : 1080;
-				
-				Canvas = document.createElement('canvas');
-				Canvas.width = Width;
-				Canvas.height = Height;
-				Context = Canvas.getContext('2d');
-				Context.fillStyle = '#808080';
-				Context.fillRect(0, 0, Width, Height);
-				
-				Img.addEventListener('load', BasesLoaded);
-				
-				var Sources;
-				Sources = Img.querySelectorAll('source');
-				Sources.forEach(function(Source){
-					Source.srcset = Canvas.toDataURL(Source.type, 0.1);
-				});
-				
-				LazyLoader.observe(Img);
-				
-			}
-			
+		if(Img.parentNode.nodeName.toLowerCase() === 'picture'){
+			LazyLoader.observe(Img);
 		} else {
 			
-			Width = Img.getAttribute('width');
-			Height = Img.getAttribute('height');
+			var Holder, StupidBoxModel, Width, Height, IsPic, FallBack;
 			
-			Width = !!Width ? Width : 1920;
-			Height = !!Height ? Height : 1080;
+			IsPic = Img.nodeName.toLowerCase() === 'picture';
 			
-			Canvas = document.createElement('canvas');
-			Canvas.width = Width;
-			Canvas.height = Height;
-			Context = Canvas.getContext('2d');
-			Context.fillStyle = '#808080';
-			Context.fillRect(0, 0, Width, Height);
-			Img.addEventListener('load', BasesLoaded);
-			
-			Img.src = Canvas.toDataURL();
-			
-		}
+			Holder = document.createElement('span');
+			Holder.className = 'lazy-holder';
+			StupidBoxModel = document.createElement('span');
+			StupidBoxModel.className = 'lazy-responsive';
 	
+			if(IsPic){
+	
+				FallBack = Img.querySelectorAll('img');
+				if(!!FallBack.length){
+	
+					FallBack = FallBack[0];
+	
+					Width = FallBack.getAttribute('width');/* .width/height gives live dimensions, we just want the value of the attribute */
+					Height = FallBack.getAttribute('height');
+	
+					Width = !!Width ? Width : 1920;
+					Height = !!Height ? Height : 1080;
+	
+				}
+	
+			} else {
+	
+				Width = Img.getAttribute('width');
+				Height = Img.getAttribute('height');
+	
+				Width = !!Width ? Width : 1920;
+				Height = !!Height ? Height : 1080;
+	
+			}
+			
+			Holder.style.width = Width + 'px';
+			StupidBoxModel.style.width = Width + 'px';
+			StupidBoxModel.style.paddingTop = ((Height / Width) * 100) + '%';
+			Holder.appendChild(StupidBoxModel);
+			StupidBoxModel.appendChild(Img.cloneNode(true));
+			Img.parentNode.replaceChild(Holder, Img);
+	
+			LazyLoader.observe(StupidBoxModel.childNodes[0]);
+			
+			if(IsPic){
+				FallBack = StupidBoxModel.childNodes[0].querySelectorAll('img');
+				if(!!FallBack.length){
+					FallBack.forEach(function(ToWatch){
+						LazyLoader.observe(ToWatch);
+					});
+				}
+			}
+		}
+
 	} else {
 		if(Img.nodeName.toLowerCase() === 'img'){
 			ActiveLoadImg(Img);
@@ -77,12 +79,7 @@ function SetupLazyLoading(Img, bLazy){
 			ActiveLoadPic(Img);
 		}
 	}
-	
-}
 
-function BasesLoaded(event){
-	event.target.removeEventListener('load', BasesLoaded);
-	LazyLoader.observe(event.target);
 }
 
 function DunLoadin(e){
@@ -138,30 +135,30 @@ function LazyLoad(IOE, Observer){
 }
 
 (function(){
-	
+
 	var ToLoad, iToLoad;
 	ToLoad = document.querySelectorAll('.js-image');
 	iToLoad = ToLoad.length;
 
 	if(typeof(IntersectionObserver) === 'undefined'){
-	
+
 		/* Get outta here, crap browsers */
-	
+
 		while(!!iToLoad){
 			iToLoad -= 1;
 			SetupLazyLoading(ToLoad[iToLoad], false);
 		}
-	
+
 	} else {
-		
+
 		if(!!iToLoad){
-		
+
 			ToLoad.forEach(function(Img){
 				SetupLazyLoading(Img, true);
 			});
-		
+
 		}
-	
+
 	}
 
 })();

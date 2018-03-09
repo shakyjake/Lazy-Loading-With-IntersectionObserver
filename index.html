@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>No Frills Lazy Loading</title>
+		<title>Lazy Loading with IntersectionObserver</title>
 		<meta name="viewport" content="width=device-width" />
 		<style type="text/css">
 		
@@ -108,6 +108,8 @@
 				padding: 0.75em;
 				text-decoration: none;
 			}
+			
+			/* Recommended */
 
 			.js-image {
 				opacity: 0.01;
@@ -120,6 +122,24 @@
 			.lazy-loaded {
 				opacity: 1;
 				transition: all 0.2s linear;
+			}
+			
+			/* Required */
+
+			.lazy-holder, .lazy-responsive {
+				display: block;
+				max-width: 100%;
+				position: relative;
+			}
+			
+			.lazy-responsive > img, .lazy-responsive > picture {
+				bottom: 0;
+				height: 100%;
+				left: 0;
+				position: absolute;
+				right: 0;
+				top: 0;
+				width: 100%;
 			}
 
 		</style>
@@ -146,7 +166,7 @@
 					
 					<p>To use, include the lazyloader.js file just before &lt;/body&gt; (like this):</p>
 				
-					<code>&lt;script href="lazyloader.0.2.js" defer="defer"&gt;&lt;/script&gt;</code>
+					<code>&lt;script href="lazyloader.0.4.js" defer="defer"&gt;&lt;/script&gt;</code>
 					
 					<p>Then add the "js-image" class to your images, change "src" to "data-src" and add a fallback image inside a noscript element with a class of "nojs-image" (like so):</p>
 				
@@ -183,13 +203,33 @@
 
 					<p>I haven't tested anything more complex so can make no assurances to its robustness.</p>
 					
+					<h2>Required CSS</h2>
+					
+					<p>You must include the following for the plugin to work:</p>
+					
+					<code>.lazy-holder, .lazy-responsive {
+	display: block;
+	max-width: 100%;
+	position: relative;
+}
+
+.lazy-responsive > img, .lazy-responsive > picture {
+	bottom: 0;
+	height: 100%;
+	left: 0;
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 100%;
+}</code>
+					
 					<h2>Browser Support</h2>
 					
-					<p>The plugin works wherever IntersectionObserver is supported. For browsers that do not support it, there is a non-lazy fallback, provided querySelectorAll is supported (so IE7 and lower won't see any images). To support IE8 you must add a data-fallback attribute to the noscript</p>
+					<p>The plugin works wherever IntersectionObserver is supported. For browsers that do not support it, there is a non-lazy fallback, provided querySelectorAll is supported (so IE7 and lower won't see any images).</p>
 					
 					<h2>Known Issues</h2>
 					
-					<p>Some images may load before they enter the viewport. I've added an intermediary fallback using a data uri from a grey canvas but it's imperfect (I assume there's some sort of race-condition nonsense causing this). </p>
+					<p>Post-fold images may load early if there's a large pre-fold image as the IntersectionObserver is firing before the pre-fold image has loaded.</p>
 					
 					<h2>Example</h2>
 					
@@ -247,7 +287,7 @@
 			</div>
 		
 		</main>
-		<script defer src="lazyloader.0.2.min.js"></script>
+		<script defer="defer" src="lazyloader.0.4.min.js"></script>
 	
 	</body>
 </html>
