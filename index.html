@@ -108,37 +108,51 @@
 				padding: 0.75em;
 				text-decoration: none;
 			}
-			
-			/* Recommended */
 
 			.js-image {
 				opacity: 0.01;
+				transform: scale(1.05);
 			}
 			
 			.lazy-loading {
-				opacity: 0.05;
+				opacity: 0.01;
+				transform: scale(1.05);
 			}
 			
 			.lazy-loaded {
 				opacity: 1;
+				transform: scale(1);
 				transition: all 0.2s linear;
 			}
 			
 			/* Required */
-
+			
 			.lazy-holder, .lazy-responsive {
-				display: block;
+				display: inline-block;
 				max-width: 100%;
+				overflow: hidden;
 				position: relative;
+				vertical-align: bottom;
 			}
 			
-			.lazy-responsive > img, .lazy-responsive > picture {
+			.lazy-responsive > img, .lazy-responsive > input[type=image], .lazy-responsive > picture {
 				bottom: 0;
 				height: 100%;
 				left: 0;
 				position: absolute;
 				right: 0;
 				top: 0;
+				width: 100%;
+			}
+			
+			.lazy-responsive img, .lazy-responsive input[type=image] {
+				border: none;
+				margin: 0;
+				padding: 0;
+				width: 100%;
+			}
+			
+			.lazy-responsive img {
 				width: 100%;
 			}
 
@@ -155,10 +169,10 @@
 				
 					<div style="float: right;">
 						<div class="example">
-							<img class="js-image" data-src="https://picsum.photos/320/90?image=861" width="320" height="90" alt="Image 861" />
-							<noscript class="nojs-image">
+							<noscript>
 								<img src="https://picsum.photos/320/90?image=861" width="320" height="90" alt="Image 861" />
 							</noscript>
+							<img class="js-image" data-src="https://picsum.photos/320/90?image=861" width="320" height="90" data-alt="Image 861" />
 						</div>
 					</div>
 			
@@ -166,21 +180,24 @@
 					
 					<p>To use, include the lazyloader.js file just before &lt;/body&gt; (like this):</p>
 				
-					<code>&lt;script href="lazyloader.0.4.js" defer="defer"&gt;&lt;/script&gt;</code>
+					<code>&lt;script href="lazyloader.0.7.js" defer="defer"&gt;&lt;/script&gt;</code>
 					
-					<p>Then add the "js-image" class to your images, change "src" to "data-src" and add a fallback image inside a noscript element with a class of "nojs-image" (like so):</p>
+					<p>Then add the "js-image" class to your images, change "src" to "data-src" and add a fallback image inside a noscript element (like so):</p>
 				
-					<code>&lt;img class="js-image" data-src="https://picsum.photos/990/557?image=456" width="990" height="557" alt="Image 456" /&gt;
-
-&lt;noscript class="nojs-image"&gt;
+					<code>&lt;noscript&gt;
 
 	&lt;img src="https://picsum.photos/990/557?image=456" width="990" height="557" alt="Image 456" /&gt;
 
-&lt;/noscript&gt;</code>
+&lt;/noscript&gt;
+
+&lt;img class="js-image" data-src="https://picsum.photos/990/557?image=456" width="990" height="557" alt="Image 456" /&gt;
+</code>
+
+					<p>You can also swap the "alt" on .js-image for "data-alt" if you're seeing the alt with js disabled. This may have unintended effects on accessibility and SEO, though.</p>
 
 					<p>Width and height attributes are <strong>strongly</strong> recommended.</p>
 
-					<p>This also works for picture elements (change the "srcset" attribute of the source elements to "data-srcset")</p>
+					<p>This also works for image inputs and picture elements (change the "srcset" attribute of the source elements to "data-srcset")</p>
 					
 					<h2>Load Effects</h2>
 					
@@ -190,36 +207,50 @@
 					
 					<code>.js-image {
 	opacity: 0.01;
+	transform: scale(1.05);
 }
 
 .lazy-loading {
 	opacity: 0.05;
+	transform: scale(1.05);
 }
 
 .lazy-loaded {
 	opacity: 1;
+	transform: scale(1);
 	transition: all 0.2s linear;
 }</code>
-
-					<p>I haven't tested anything more complex so can make no assurances to its robustness.</p>
 					
 					<h2>Required CSS</h2>
 					
 					<p>You must include the following for the plugin to work:</p>
 					
 					<code>.lazy-holder, .lazy-responsive {
-	display: block;
+	display: inline-block;
 	max-width: 100%;
+	overflow: hidden; /* (not required if not using scale transformation on the loading classes) */
 	position: relative;
+	vertical-align: bottom;
 }
 
-.lazy-responsive > img, .lazy-responsive > picture {
+.lazy-responsive &gt; img, .lazy-responsive &gt; input[type=image], .lazy-responsive &gt; picture {
 	bottom: 0;
 	height: 100%;
 	left: 0;
 	position: absolute;
 	right: 0;
 	top: 0;
+	width: 100%;
+}
+
+.lazy-responsive img, .lazy-responsive input[type=image] {
+	border: none;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+}
+
+.lazy-responsive img {
 	width: 100%;
 }</code>
 					
@@ -237,46 +268,46 @@
 					
 					<div class="example">
 				
-						<img class="js-image" data-src="https://picsum.photos/990/557?image=456" width="990" height="557" alt="Image 456" />
-						<noscript class="nojs-image">
+						<noscript>
 							<img src="https://picsum.photos/990/557?image=456" width="990" height="557" alt="Image 456" />
 						</noscript>
+						<img class="js-image" data-src="https://picsum.photos/990/557?image=456" width="990" height="557" data-alt="Image 456" />
 					
 					</div>
 					
 					<div class="example">
 						
-						<img class="js-image" data-src="https://picsum.photos/990/557?image=789" width="990" height="557" alt="Image 789" />
-						<noscript class="nojs-image">
+						<noscript>
 							<img src="https://picsum.photos/990/557?image=789" width="990" height="557" alt="Image 789" />
 						</noscript>
+						<img class="js-image" data-src="https://picsum.photos/990/557?image=789" width="990" height="557" data-alt="Image 789" />
 					
 					</div>
 					
 					<div class="example">
 						
-						<img class="js-image" data-src="https://picsum.photos/990/557?image=220" width="990" height="557" alt="Image 220" />
-						<noscript class="nojs-image">
+						<noscript>
 							<img src="https://picsum.photos/990/557?image=220" width="990" height="557" alt="Image 220" />
 						</noscript>
+						<img class="js-image" data-src="https://picsum.photos/990/557?image=220" width="990" height="557" data-alt="Image 220" />
 					
 					</div>
 					
 					<div class="example">
 						
-						<img class="js-image" data-src="https://picsum.photos/990/557?image=666" width="990" height="557" alt="Image 666" />
-						<noscript class="nojs-image">
+						<noscript>
 							<img src="https://picsum.photos/990/557?image=666" width="990" height="557" alt="Image 666" />
 						</noscript>
+						<img class="js-image" data-src="https://picsum.photos/990/557?image=666" width="990" height="557" data-alt="Image 666" />
 					
 					</div>
 					
 					<div class="example">
 						
-						<img class="js-image" data-src="https://picsum.photos/990/557?image=523" width="990" height="557" alt="Image 523" />
-						<noscript class="nojs-image">
+						<noscript>
 							<img src="https://picsum.photos/990/557?image=523" width="990" height="557" alt="Image 523" />
 						</noscript>
+						<img class="js-image" data-src="https://picsum.photos/990/557?image=523" width="990" height="557" data-alt="Image 523" />
 					
 					</div>
 					
@@ -287,7 +318,7 @@
 			</div>
 		
 		</main>
-		<script defer="defer" src="lazyloader.0.4.min.js"></script>
+		<script defer="defer" src="lazyloader.0.7.min.js"></script>
 	
 	</body>
 </html>

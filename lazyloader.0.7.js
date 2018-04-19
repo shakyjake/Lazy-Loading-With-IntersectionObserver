@@ -1,5 +1,31 @@
 /*
-	Copyright (c) 2018-01-30 Jake Nicholson
+	Lazy loader w/ IntersectionObserver
+	- 2018-04-11 Jake Nicholson (www.eskdale.net)
+	
+	This is free and unencumbered software released into the public domain.
+
+	Anyone is free to copy, modify, publish, use, compile, sell, or
+	distribute this software, either in source code form or as a compiled
+	binary, for any purpose, commercial or non-commercial, and by any
+	means.
+	
+	In jurisdictions that recognize copyright laws, the author or authors
+	of this software dedicate any and all copyright interest in the
+	software to the public domain. We make this dedication for the benefit
+	of the public at large and to the detriment of our heirs and
+	successors. We intend this dedication to be an overt act of
+	relinquishment in perpetuity of all present and future rights to this
+	software under copyright law.
+	
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+	EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+	MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+	IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+	OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+	ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+	OTHER DEALINGS IN THE SOFTWARE.
+	
+	For more information, please refer to <http://unlicense.org/>
 */
 
 var LazyLoader;
@@ -31,6 +57,7 @@ function SetupLazyLoading(Img, bLazy){
 			if(IsPic){
 	
 				FallBack = Img.querySelectorAll('img');
+				
 				if(!!FallBack.length){
 	
 					FallBack = FallBack[0];
@@ -73,10 +100,10 @@ function SetupLazyLoading(Img, bLazy){
 		}
 
 	} else {
-		if(Img.nodeName.toLowerCase() === 'img'){
-			ActiveLoadImg(Img);
-		} else {
+		if(Img.nodeName.toLowerCase() === 'picture'){
 			ActiveLoadPic(Img);
+		} else {
+			ActiveLoadImg(Img);
 		}
 	}
 
@@ -86,20 +113,44 @@ function DunLoadin(e){
 	e.target.className = 'lazy-loaded';
 }
 
-function LazyLoadImg(oImg){
-	oImg.className = 'lazy-loading';
-	oImg.addEventListener('load', DunLoadin);
-	oImg.src = oImg.dataset.src;
-	oImg.dataset.src = '';
+function LazyLoadImg(oImg, Observer){
+	if(oImg.nodeName.toLowerCase() === 'img'){
+		oImg.className = 'lazy-loading';
+		oImg.addEventListener('load', DunLoadin);
+	}
+	var SameSources;
+	SameSources = document.querySelectorAll('[data-src=\'' + oImg.dataset.src + '\']');
+	SameSources.forEach(function(ToDo){
+		Observer.unobserve(ToDo);
+		if(!!ToDo.dataset.src.length){
+			ToDo.className = ToDo.className === 'lazy-loading' ? 'lazy-loading' : 'lazy-loaded';
+			ToDo.src = ToDo.dataset.src;
+			ToDo.dataset.src = '';
+		} else {
+			ToDo.className = 'lazy-loaded';
+		}
+		if('alt' in ToDo.dataset){
+			if(!!ToDo.dataset.alt.length){
+				ToDo.alt = ToDo.dataset.alt;
+				ToDo.dataset.alt = '';
+			}
+		}
+	});
 }
 
-function LazyLoadPic(oPic){
-	oPic.className = 'lazy-loaded';
-	var Sources;
+function LazyLoadPic(oPic, Observer){
+	var Sources, SameSources;
 	Sources = oPic.querySelectorAll('source');
 	Sources.forEach(function(Source){
-		Source.srcset = Source.dataset.srcset;
-		Source.dataset.srcset = '';
+		SameSources = document.querySelectorAll('[data-srcset=\'' + Source.dataset.srcset + '\']');
+		SameSources.forEach(function(ToDo){
+			Observer.unobserve(ToDo);
+			ToDo.parentNode.className = 'lazy-loaded';
+			if(!!ToDo.dataset.srcset.length){
+				ToDo.srcset = ToDo.dataset.srcset;
+				ToDo.dataset.srcset = '';
+			}
+		});
 	});
 }
 
@@ -121,15 +172,17 @@ function ActiveLoadPic(oPic){
 
 function LazyLoad(IOE, Observer){
 	IOE.forEach(function(Observed){
+		if(typeof(Observed.isIntersecting) === 'undefined'){/* cheers for implementing half an API you unrepentant arseholes */
+			Observed.isIntersecting = !!Observed.intersectionRatio;
+		}
 		if(Observed.isIntersecting){
 			var Target;
 			Target = Observed.target;
-			if(Target.nodeName.toLowerCase() === 'img'){
-				LazyLoadImg(Target);
+			if(Target.nodeName.toLowerCase() === 'picture'){
+				LazyLoadPic(Target, Observer);
 			} else {
-				LazyLoadPic(Target);
+				LazyLoadImg(Target, Observer);
 			}
-			Observer.unobserve(Target);
 		}
 	});
 }
