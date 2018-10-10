@@ -107,18 +107,20 @@ LazyLoader = function(Selector, RootMargin){
 				if(!!Holder.getAttribute('data-sizes')){
 					Element.sizes = Holder.getAttribute('data-sizes');
 				}
-				Element.src = Holder.getAttribute('data-src');
 				if(!!Holder.getAttribute('data-srcset')){
 					Element.srcset = Holder.getAttribute('data-srcset');
 				}
+				Element.src = Holder.getAttribute('data-src');
 				break;
 			case 'picture':
 				var Child, i, Sources;
+				i = 0;
 				Sources = Holder.Sources.length;
 				while(i < Sources){
 					Child = document.createElement('source');
 					Child.srcset = Holder.Sources[i].Srcset;
 					Child.sizes = Holder.Sources[i].Sizes;
+					Child.type = Holder.Sources[i].Type;
 					Element.appendChild(Child);
 					i += 1;
 				}
@@ -212,48 +214,22 @@ LazyLoader = function(Selector, RootMargin){
 		});
 	};
 	
-	_.Attach = function(Img, bLazy){
-
-		if(bLazy){
-			
-			if(Img.parentNode.nodeName.toLowerCase() === 'picture'){
-				
-				_.Observer.observe(Img);
-				
-			} else {
-				
-				var IsPic, FallBack;
-				
-				IsPic = Img.nodeName.toLowerCase() === 'picture';
-		
-				_.Observer.observe(Img);
-				
-				if(IsPic){
-					FallBack = Img.querySelectorAll('img');
-					if(!!FallBack.length){
-						FallBack.forEach(function(ToWatch){
-							_.Observer.observe(ToWatch);
-						});
-					}
-				}
-			}
-		}
-	
-	};
-	
 	_.Wrap = function(Element, UsingIntersection){
 		
 		var StupidBoxModel, Width, Height, Sources;
-		
+
 		Sources = Element.querySelectorAll('.source');
+		
 		if(!!Sources.length){
 			Element.Sources = [];
 			while(!!Sources.length){
 				Element.Sources.push({
 					Srcset : Sources[0].getAttribute('data-srcset'),
-					Sizes : Sources[0].getAttribute('data-sizes')
+					Sizes : Sources[0].getAttribute('data-sizes'),
+					Type : Sources[0].getAttribute('data-type')
 				});
 				Sources[0].parentNode.removeChild(Sources[0]);
+				Sources = Element.querySelectorAll('.source');
 			}
 		}
 		
@@ -271,7 +247,11 @@ LazyLoader = function(Selector, RootMargin){
 		StupidBoxModel.style.paddingTop = ((Height / Width) * 100) + '%';
 		Element.appendChild(StupidBoxModel);
 		
-		_.Attach(Element, UsingIntersection);
+		if(UsingIntersection){
+		
+			_.Observer.observe(Element);
+		
+		}
 		
 	};
 	
