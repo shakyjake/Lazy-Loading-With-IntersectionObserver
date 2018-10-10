@@ -6,6 +6,8 @@
 		<meta name="viewport" content="width=device-width" />
 		<style type="text/css">
 		
+			/* demo styles - not required for operation */
+		
 			@import url('https://fonts.googleapis.com/css?family=Anonymous+Pro|Roboto+Condensed:700|Roboto:300');
 			
 			* {
@@ -59,6 +61,38 @@
 				line-height: 1.8em;
 			}
 			
+			h2 {
+				font-size: 36px;
+			}
+			
+			h3 {
+				font-size: 32px;
+			}
+			
+			h4 {
+				font-size: 28px;
+			}
+			
+			h5 {
+				font-size: 24px;
+			}
+			
+			h6 {
+				font-size: 18px;
+			}
+			
+			.required {
+				background: #333;
+				box-shadow: 0 0 0 0.45em #333;
+				color: #FFF;
+				font-family: 'Roboto', sans-serif;
+				font-size: 16px;
+				font-style: italic;
+				font-weight: 300;
+				line-height: 28px;
+				margin: 0 0 0 0.9em;
+			}
+			
 			p {
 				padding: 0.45em 0;
 			}
@@ -100,7 +134,7 @@
 			}
 			
 			.example {
-				padding: 0.9em 0;
+				padding: 5.6451612903225806451612903225806% 0;
 			}
 			
 			.example a {
@@ -108,55 +142,32 @@
 				padding: 0.75em;
 				text-decoration: none;
 			}
-
-			.js-image {
-				opacity: 0.01;
-				transform: scale(1.05);
+			
+			.three {
+				float: left;
+				margin-right: 2.3333%;
+				width: 31%;
 			}
 			
-			.lazy-loading {
-				opacity: 0.01;
-				transform: scale(1.05);
+			.three:nth-child(n) {
+				margin-right: 3.5%;
 			}
 			
-			.lazy-loaded {
-				opacity: 1;
-				transform: scale(1);
-				transition: all 0.2s linear;
+			.three:nth-child(3n) {
+				margin-right: 0;
 			}
 			
-			/* Required */
-			
-			.lazy-holder, .lazy-responsive {
-				display: inline-block;
-				max-width: 100%;
-				overflow: hidden;
-				position: relative;
-				vertical-align: bottom;
+			.three:nth-child(3n + 1) {
+				clear: both;
 			}
 			
-			.lazy-responsive > img, .lazy-responsive > input[type=image], .lazy-responsive > picture {
-				bottom: 0;
-				height: 100%;
-				left: 0;
-				position: absolute;
-				right: 0;
-				top: 0;
-				width: 100%;
+			.clear {
+				clear: both;
 			}
 			
-			.lazy-responsive img, .lazy-responsive input[type=image] {
-				border: none;
-				margin: 0;
-				padding: 0;
-				width: 100%;
-			}
-			
-			.lazy-responsive img {
-				width: 100%;
-			}
-
 		</style>
+		
+		<link type="text/css" rel="stylesheet" href="lazy-loader/lazyloader.css" />
 		
 	</head>
 	<body>
@@ -166,159 +177,150 @@
 			<div class="wrapper">
 			
 				<div class="content">
-				
-					<div style="float: right;">
-						<div class="example">
-							<noscript>
-								<img src="https://picsum.photos/320/90?image=861" width="320" height="90" alt="Image 861" />
-							</noscript>
-							<img class="js-image" data-src="https://picsum.photos/320/90?image=861" width="320" height="90" data-alt="Image 861" />
-						</div>
-					</div>
 			
 					<h1>Lazy Loading with IntersectionObserver</h1>
 					
-					<p>To use, include the lazyloader.js file just before &lt;/body&gt; (like this):</p>
-				
-					<code>&lt;script href="lazyloader.1.0.js" defer="defer"&gt;&lt;/script&gt;</code>
+					<p>Defers loading of images until they are required.</p>
 					
-					<p>Then add the "js-image" class to your images, change "src" to "data-src" and add a fallback image inside a noscript element (like so):</p>
-				
+					<h2>Usage</h2>
+					
+					<p>To use, you have to wrap your images in a &lt;noscript;&gt; tag (for browsers that don't support javascript) and create a span after them with the appropriate data attributes</p>
+					
 					<code>&lt;noscript&gt;
-
-	&lt;img src="https://picsum.photos/990/557?image=456" width="990" height="557" alt="Image 456" /&gt;
-
+	&lt;img src="example-images/andras-kovacs-1091685-unsplash.jpg" width="427" height="285" alt="" /&gt;
 &lt;/noscript&gt;
-
-&lt;img class="js-image" data-src="https://picsum.photos/990/557?image=456" width="990" height="557" alt="Image 456" /&gt;
-</code>
-
-					<p>You can also swap the "alt" on .js-image for "data-alt" if you're seeing the alt with js disabled. This may have unintended effects on accessibility and SEO, though.</p>
-
-					<p>Width and height attributes are <strong>strongly</strong> recommended.</p>
-
-					<p>This also works for image inputs and picture elements (change the "srcset" attribute of the source elements to "data-srcset")</p>
+&lt;span class="js-image" data-src="example-images/andras-kovacs-1091685-unsplash.jpg" data-width="427" data-height="285" data-alt=""&gt;&lt;/span&gt;</code>
 					
-					<h2>Load Effects</h2>
-					
-					<p>You can use CSS transitions with the "js-image", "lazy-loading" and "lazy-loaded" classes to add effects for uninitialised, loading and loaded images respectively.</p>
-					
-					<p>This demo uses the following:</p>
-					
-					<code>.js-image {
-	opacity: 0.01;
-	transform: scale(1.05);
-}
-
-.lazy-loading {
-	opacity: 0.05;
-	transform: scale(1.05);
-}
-
-.lazy-loaded {
-	opacity: 1;
-	transform: scale(1);
-	transition: all 0.2s linear;
-}</code>
-					
-					<h2>Required CSS</h2>
-					
-					<p>You must include the following for the plugin to work:</p>
-					
-					<code>.lazy-holder, .lazy-responsive {
-	display: inline-block;
-	max-width: 100%;
-	overflow: hidden; /* (not required if not using scale transformation on the loading classes) */
-	position: relative;
-	vertical-align: bottom;
-}
-
-.lazy-responsive &gt; img, .lazy-responsive &gt; input[type=image], .lazy-responsive &gt; picture {
-	bottom: 0;
-	height: 100%;
-	left: 0;
-	position: absolute;
-	right: 0;
-	top: 0;
-	width: 100%;
-}
-
-.lazy-responsive img, .lazy-responsive input[type=image] {
-	border: none;
-	margin: 0;
-	padding: 0;
-	width: 100%;
-}
-
-.lazy-responsive img {
-	width: 100%;
-}</code>
-					
-					<h2>Browser Support</h2>
-					
-					<p>The plugin works wherever IntersectionObserver is supported. For browsers that do not support it, there is a non-lazy fallback, provided querySelectorAll is supported (so IE7 and lower won't see any images).</p>
-					
-					<h2>Known Issues</h2>
-					
-					<p>Post-fold images may load early if there's a large pre-fold image as the IntersectionObserver is firing before the pre-fold image has loaded.</p>
-					
-					<h2>Example</h2>
-					
-					<p>Hopefully I've written enough to push these images under the fold.</p>
-					
-					<div class="example">
+					<p>Then include the lazyloader JS file just before &lt;/body&gt;: and invoke the lazyloader after the window load event, e.g.</p>
 				
-						<noscript>
-							<img src="https://picsum.photos/990/557?image=456" width="990" height="557" alt="Image 456" />
-						</noscript>
-						<img class="js-image" data-src="https://picsum.photos/990/557?image=456" width="990" height="557" data-alt="Image 456" />
+					<code>&lt;script&gt;
+
+	function WindowLoad(){
+		new LazyLoader('.js-image');
+	}
+
+	(function(){
+		window.addEventListener('load', WindowLoad);
+	})();
+
+&lt;/script&gt;
+&lt;script defer="defer" src="lazyloader/lazyloader.1.2.js"&gt;&lt;/script&gt;</code>
+
+					<p>You'll also have to include the Required CSS styles from lazyloader.css</p>
+
+					<h2>Data Attributes</h2>
 					
-					</div>
+					<h4>data-src <span class="required">Required</span></h4>
+					<p>The src attribute of the image</p>
+					<h4>data-width <span class="required">Required</span></h4>
+					<p>The width of the image</p>
+					<h4>data-height <span class="required">Required</span></h4>
+					<p>The height of the image</p>
+					<h4>data-alt <span class="required">Required for img, input and picture only</span></h4>
+					<p>The alt attribute of the image</p>
+					<h4>data-srcset <span class="required">Required for picture elements only</span></h4>
+					<p>The srcset attribute of the image</p>
+					<h4>data-sizes</h4>
+					<p>The sizes attribute of the image</p>
 					
-					<div class="example">
+					<h2>Picture Elements</h2>
+					
+					<p>For picture elements, you will need to create additional spans with a class of "source", e.g.</p>
+					
+					<h2>Demo</h2>
+					
+					<div class="cols">
+					
+						<div class="three">
 						
-						<noscript>
-							<img src="https://picsum.photos/990/557?image=789" width="990" height="557" alt="Image 789" />
-						</noscript>
-						<img class="js-image" data-src="https://picsum.photos/990/557?image=789" width="990" height="557" data-alt="Image 789" />
-					
-					</div>
-					
-					<div class="example">
+							<div class="example">
+								<noscript>
+									<img src="example-images/wei-ding-1092750-unsplash.jpg" width="395" height="494" alt="" />
+								</noscript>
+								<span class="js-image" data-src="example-images/wei-ding-1092750-unsplash.jpg" data-width="395" data-height="494" data-alt=""></span>
+							</div>
+							<div class="example">
+								<noscript>
+									<img src="example-images/andras-kovacs-1091685-unsplash.jpg" width="427" height="285" alt="" />
+								</noscript>
+								<span class="js-image" data-src="example-images/andras-kovacs-1091685-unsplash.jpg" data-width="427" data-height="285" data-alt=""></span>
+							</div>
+							<div class="example">
+								<noscript>
+									<img src="example-images/joey-nicotra-1092263-unsplash.jpg" width="389" height="486" alt="" />
+								</noscript>
+								<span class="js-image" data-src="example-images/joey-nicotra-1092263-unsplash.jpg" data-width="389" data-height="486" data-alt=""></span>
+							</div>
 						
-						<noscript>
-							<img src="https://picsum.photos/990/557?image=220" width="990" height="557" alt="Image 220" />
-						</noscript>
-						<img class="js-image" data-src="https://picsum.photos/990/557?image=220" width="990" height="557" data-alt="Image 220" />
+						</div>
 					
-					</div>
-					
-					<div class="example">
+						<div class="three">
 						
-						<noscript>
-							<img src="https://picsum.photos/990/557?image=666" width="990" height="557" alt="Image 666" />
-						</noscript>
-						<img class="js-image" data-src="https://picsum.photos/990/557?image=666" width="990" height="557" data-alt="Image 666" />
-					
-					</div>
-					
-					<div class="example">
+							<div class="example">
+								<noscript>
+									<img src="example-images/logan-lambert-1091946-unsplash.jpg" width="547" height="365" alt="" />
+								</noscript>
+								<span class="js-image" data-src="example-images/logan-lambert-1091946-unsplash.jpg" data-width="547" data-height="365" data-alt=""></span>
+							</div>
+							<div class="example">
+								<noscript>
+									<img src="example-images/kal-loftus-1091706-unsplash.jpg" width="558" height="838" alt="" />
+								</noscript>
+								<span class="js-image" data-src="example-images/kal-loftus-1091706-unsplash.jpg" data-width="558" data-height="838" data-alt=""></span>
+							</div>
+							<div class="example">
+								<noscript>
+									<img src="example-images/rucksack-magazine-1092901-unsplash.jpg" width="588" height="392" alt="" />
+								</noscript>
+								<span class="js-image" data-src="example-images/rucksack-magazine-1092901-unsplash.jpg" data-width="588" data-height="392" data-alt=""></span>
+							</div>
 						
-						<noscript>
-							<img src="https://picsum.photos/990/557?image=523" width="990" height="557" alt="Image 523" />
-						</noscript>
-						<img class="js-image" data-src="https://picsum.photos/990/557?image=523" width="990" height="557" data-alt="Image 523" />
+						</div>
+					
+						<div class="three">
+						
+							<div class="example">
+								<noscript>
+									<img src="example-images/andre-benz-1092194-unsplash.jpg" width="672" height="448" alt="" />
+								</noscript>
+								<span class="js-image" data-src="example-images/andre-benz-1092194-unsplash.jpg" data-width="672" data-height="448" data-alt=""></span>
+							</div>
+							<div class="example">
+								<noscript>
+									<img src="example-images/fernando-rodrigues-1091715-unsplash.jpg" width="518" height="292" alt="" />
+								</noscript>
+								<span class="js-image" data-src="example-images/fernando-rodrigues-1091715-unsplash.jpg" data-width="518" data-height="292" data-alt=""></span>
+							</div>
+							<div class="example">
+								<noscript>
+									<img src="example-images/logan-lambert-1091999-unsplash.jpg" width="365" height="547" alt="" />
+								</noscript>
+								<span class="js-image" data-src="example-images/logan-lambert-1091999-unsplash.jpg" data-width="365" data-height="547" data-alt=""></span>
+							</div>
+						
+						</div>
+						
+						<div class="clear"></div>
 					
 					</div>
-					
-					<p>(Very Good Images from <a href="https://picsum.photos/" target="_blank">picsum.photos</a>)</p>
 				
 				</div>
 			
 			</div>
 		
 		</main>
-		<script defer="defer" src="lazyloader.1.0.ug.js"></script>
+		<script>
+		
+			function WindowLoad(){
+				new LazyLoader('.js-image');
+			}
+		
+			(function(){
+				window.addEventListener('load', WindowLoad);
+			})();
+		
+		</script>
+		<script defer="defer" src="lazy-loader/lazyloader.1.2.ug.js"></script>
 	
 	</body>
 </html>

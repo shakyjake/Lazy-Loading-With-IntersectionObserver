@@ -1,0 +1,41 @@
+/* Optional */
+
+.lazy-loading {
+	opacity: 0.01;
+	transform: scale(1.05);
+}
+
+.lazy-loaded {
+	opacity: 1;
+	transform: scale(1);
+	transition: all 0.2s linear;
+}
+
+/* Required */
+
+.lazy-holder {
+	display: inline-block;
+	max-width: 100%;
+	overflow: hidden;
+	position: relative;
+	vertical-align: bottom;
+}
+
+.lazy-responsive {
+	display: block;
+	position: relative;
+	width: 100%;
+}
+
+.lazy-responsive > img, .lazy-responsive > input[type=image], .lazy-responsive > picture, .lazy-responsive > iframe {
+	border: none;
+	bottom: 0;
+	height: 100%;
+	left: 0;
+	margin: 0;
+	padding: 0;
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 100%;
+}
