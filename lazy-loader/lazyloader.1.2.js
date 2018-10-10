@@ -29,6 +29,7 @@
 	
 	What's new in this version?
 	 - New markup (don't initialise with a "broken" image)
+	 - Fallback actually works (don't think it did before)
 */
 
 var LazyLoader;
@@ -43,7 +44,7 @@ LazyLoader = function(Selector, RootMargin){
 	
 	_.RootMargin = typeof(RootMargin) === 'number' ? RootMargin : 50;
 	
-	_.ScrollThrottler = null;
+	_.IgnoreScroll = false;
 	
 	_.Elements = [];
 	
@@ -54,6 +55,24 @@ LazyLoader = function(Selector, RootMargin){
 		} else {
 			Target.className = 'lazy-loaded';
 		}
+	};
+	
+	_.LoadResourceFallback = function(Holder){
+		
+		var NewElements, Count;
+		NewElements = [];
+		Count = _.Elements.length;
+		while(!!Count){
+			Count -= 1;
+			if(_.Elements[Count] !== Holder){
+				NewElements.push(_.Elements[Count]);
+			}
+		}
+		_.Elements = NewElements;
+		
+		
+		_.LoadResource(Holder);
+		
 	};
 	
 	_.LoadResourceObserver = function(Holder, Observer){
@@ -157,20 +176,27 @@ LazyLoader = function(Selector, RootMargin){
 		
 			while(!!Count){
 				Count -= 1;
-				if(_.FallBackIsIntersecting(_.Elements[Count])){
-					_.LoadResource(_.Elements[Count]);
+				if(!!_.Elements[Count]){
+					if(_.FallBackIsIntersecting(_.Elements[Count])){
+						_.LoadResourceFallback(_.Elements[Count]);
+					}
 				}
 			}
 		
 		} else {
-			window.removeEventListener('scroll', _.WindowScrollThrottle);
+			window.onscroll = null;
 		}
 	
 	};
 	
 	_.WindowScrollThrottle = function(){
-		clearTimeout(_.ScrollThrottler);
-		_.ScrollThrottler = setTimeout(_.WindowScroll, 30);
+		if(!_.IgnoreScroll){
+			_.IgnoreScroll = true;
+			_.WindowScroll();
+			setTimeout(function(){
+				_.IgnoreScroll = false;
+			}, 30);
+		}
 	};
 	
 	_.LazyLoad = function(IOE, Observer){
@@ -274,10 +300,8 @@ LazyLoader = function(Selector, RootMargin){
 				Count -= 1;
 				_.Wrap(_.Elements[Count], false);
 			}
-		
-			_.Elements = document.querySelectorAll(_.Selector);
 			
-			window.addEventListener('scroll', _.WindowScrollThrottle);
+			window.onscroll = _.WindowScrollThrottle;/* IE doesn't like window.addEventListener('scroll'); */
 			 _.WindowScroll();
 		}
 		
