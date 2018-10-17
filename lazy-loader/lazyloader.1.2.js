@@ -134,6 +134,7 @@ LazyLoader = function(Selector, RootMargin){
 				break;
 			case 'input':
 				Element.addEventListener('load', _.Loaded);
+				Element.type = 'image';
 				Element.alt = Holder.getAttribute('data-alt');
 				Element.width = Holder.getAttribute('data-width');
 				Element.height = Holder.getAttribute('data-height');
