@@ -185,19 +185,19 @@
 					
 					<h2>Usage</h2>
 					
-					<p>To use, you have to wrap your images in a &lt;noscript;&gt; tag (for browsers that don't support javascript) and create a span after them with the appropriate data attributes</p>
+					<p>To use, you have to wrap your images in a &lt;noscript;&gt; tag (for browsers that don't support javascript) and create a span after them with a class of "js-image" the appropriate data attributes</p>
 					
 					<code>&lt;noscript&gt;
 	&lt;img src="example-images/andras-kovacs-1091685-unsplash.jpg" width="427" height="285" alt="" /&gt;
 &lt;/noscript&gt;
 &lt;span class="js-image" data-src="example-images/andras-kovacs-1091685-unsplash.jpg" data-width="427" data-height="285" data-alt=""&gt;&lt;/span&gt;</code>
 					
-					<p>Then include the lazyloader JS file just before &lt;/body&gt;: and invoke the lazyloader after the window load event, e.g.</p>
+					<p>Then include the lazyloader JS file just before &lt;/body&gt;: and start the observer after the window load event, e.g.</p>
 				
 					<code>&lt;script&gt;
 
 	function WindowLoad(){
-		new LazyLoader('.js-image');
+		window.LazyLoadHandler.ObserveAll();
 	}
 
 	(function(){
@@ -205,7 +205,7 @@
 	})();
 
 &lt;/script&gt;
-&lt;script defer="defer" src="lazyloader/lazyloader.1.2.js"&gt;&lt;/script&gt;</code>
+&lt;script defer="defer" src="lazyloader/lazyloader.1.4.js"&gt;&lt;/script&gt;</code>
 
 					<p>You'll also have to include the Required CSS styles from lazyloader.css</p>
 
@@ -370,7 +370,7 @@
 		<script>
 		
 			function WindowLoad(){
-				new LazyLoader('.js-image');
+				window.LazyLoadHandler.ObserveAll();
 			}
 		
 			(function(){
@@ -378,7 +378,7 @@
 			})();
 		
 		</script>
-		<script defer="defer" src="lazy-loader/lazyloader.1.2.js"></script>
+		<script defer="defer" src="lazy-loader/lazyloader.1.4.js"></script>
 	
 	</body>
 </html>
