@@ -39,3 +39,8 @@
 	top: 0;
 	width: 100%;
 }
+
+.lazy-responsive > picture img {
+	display: block;
+	min-width: 100%;
+}
